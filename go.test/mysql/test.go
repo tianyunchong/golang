@@ -14,7 +14,7 @@ type ConMysql struct {
 }
 
 func (con *ConMysql) Init() (db *sql.DB) {
-    db, err := sql.Open("mysql", "root:gc7232275@tcp(192.168.8.18:3306)/tianyunzi?charset=utf8")
+    db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tianyunzi?charset=utf8")
     if err != nil {
         fmt.Println("database init error : ", err.Error())
         return
