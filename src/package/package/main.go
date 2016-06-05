@@ -1,8 +1,9 @@
 package main
 
 import (
-	"config"
 	"fmt"
+
+	"github.com/tianyunchong/golang/test/src/config"
 )
 
 func main() {
