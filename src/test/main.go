@@ -1,8 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
+	/** 25s times later */
+	t := time.Now().Add(25 * time.Second)
+	fmt.Println(t)
+	return
 	/* local variable definition */
 	var a int = 100
 	var b int = 200
