@@ -10,8 +10,10 @@ import (
 )
 
 var (
-	configFile = flag.String("configfile", "config/config.ini", "General configuration file")
+	cpath = "/www/gitwork/golang/src/examples/config/config.ini"
+	configFile = flag.String("configfile", cpath, "General configuration file")
 )
+
 var TOPIC = make(map[string]string)
 
 func main() {

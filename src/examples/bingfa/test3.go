@@ -1,3 +1,6 @@
+/**
+*  本案例可以看到channel默认是不会阻塞住进程的
+*/
 package main
 
 import "fmt"
