@@ -5,8 +5,10 @@ package main
 
 import (
 	"caiji/helper"
-	"fmt"
 	"caiji/curl"
+	"caiji/preg"
+	"caiji/mysql"
+	"fmt"
 )
 
 func main() {
@@ -14,5 +16,15 @@ func main() {
 	mainConfig := helper.ReadIni("/www/gitwork/golang/src/caiji/config/config.ini", "main")
 	var url string = mainConfig["url"]
 	html := curl.GetHtml(url)
-	fmt.Println(html)
+	urls := preg.GetUrls(html)
+	//往数据库里入mysql
+	for _, url := range urls {
+		id := mysql.AddUrl(url)
+		fmt.Println(id)
+		break
+	}
+	fmt.Println(urls)
 }
+
+
+
