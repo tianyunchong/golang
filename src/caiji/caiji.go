@@ -7,8 +7,8 @@ import (
 	"caiji/helper"
 	"caiji/curl"
 	"caiji/preg"
-	"caiji/mysql"
 	"fmt"
+	"caiji/mysql"
 )
 
 func main() {

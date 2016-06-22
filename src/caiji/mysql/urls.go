@@ -18,10 +18,11 @@ func AddUrl(url string) int64{
 		fmt.Println(url+"已经存在\n")
 		return 0
 	}
+	return 1
 	//开始插入url
-	con := Conmysql{}
-	id := con.Insert(map[string]string{"url":url}, "cj_urls")
-	return id
+	//con := Conmysql{}
+	//id := con.Insert(map[string]string{"url":url}, "cj_urls")
+	//return id
 }
 
 /**

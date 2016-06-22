@@ -52,12 +52,12 @@ func (con *Conmysql) Findfirst(columns []string, where string, tablename string)
 	defer query.Close()
 	if err != nil {
 		fmt.Println("select error: ", err.Error())
-		return
+		return res
 	}
 	query.Next()
 	if err := query.Scan(scans...); err != nil {
-		fmt.Println("Error")
-		return
+		fmt.Println(err)
+		return res
 	}
 	res = map[string]string{}
 	for i, v := range values {
@@ -78,15 +78,18 @@ func (conn *Conmysql)Insert(data map[string]string, table string) int64{
 		values = append(values, value)
 		rep = append(rep, "?")
 	}
-	keyStr := strings.Join(keys, ",")
-	stmt, err := conn.db.Prepare("INSERT "+table+" ("+keyStr+") values ("+strings.Join(rep, ",")+")")
+	//keyStr := strings.Join(keys, ",")
+	//fmt.Println("INSERT "+table+" ("+keyStr+") values ("+strings.Join(rep, ",")+")")
+	//return 0
+	//stmt, err := conn.db.Prepare("INSERT "+table+" ("+keyStr+") values ("+strings.Join(rep, ",")+")")
+	stmt, err := conn.db.Prepare(`INSERT cj_urls (url, addtime, uptime) values (?, ?, ?)`)
 	if err != nil {
 		fmt.Println("please check you sql!")
 		return 0
 	}
-	fmt.Println(values)
-	//res, err := stmt.Exec(values...)
-	res, err := stmt.Exec(values[0])
+	fmt.Println(stmt)
+	return 0
+	res, err := stmt.Exec(values...)
 	if (err != nil) {
 		fmt.Println("insert is failed!")
 		return 0
