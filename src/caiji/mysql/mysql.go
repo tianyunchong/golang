@@ -1,8 +1,4 @@
-/**
- * 封装下mysql的常用操作
- */
-package main
-
+package mysql
 import (
 	"database/sql"
 	"fmt"
@@ -30,6 +26,8 @@ func (con *Conmysql) Init(conf map[string]string) {
 	con.db = db
 }
 
+
+
 /**
  * 查询单条信息
  * @param  {[type]} con *Conmysql)    Findfirst(columns string, where string [description]
@@ -54,12 +52,12 @@ func (con *Conmysql) Findfirst(columns []string, where string, tablename string)
 	defer query.Close()
 	if err != nil {
 		fmt.Println("select error: ", err.Error())
-		return
+		return res
 	}
 	query.Next()
 	if err := query.Scan(scans...); err != nil {
-		fmt.Println("Error")
-		return
+		fmt.Println(err)
+		return res
 	}
 	res = map[string]string{}
 	for i, v := range values {
@@ -68,11 +66,34 @@ func (con *Conmysql) Findfirst(columns []string, where string, tablename string)
 	return res
 }
 
-func main() {
-	var columns = []string{"id", "keyword"}
-	conf := map[string]string{"host": "127.0.0.1", "user": "root", "pass": "123456", "port": "3306", "db": "tianyunzi"}
-	con := Conmysql{}
-	con.Init(conf)
-	rs := con.Findfirst(columns, "id = 1", "keyword")
-	fmt.Println(rs)
+/**
+ * mysql插入操作
+ */
+func (conn *Conmysql)Insert(data map[string]string, table string) int64{
+	var keys []string
+	var values []interface{}
+	var rep []string
+	for key, value := range data {
+		keys = append(keys, key)
+		values = append(values, value)
+		rep = append(rep, "?")
+	}
+	keyStr := strings.Join(keys, ",")
+	stmt, err := conn.db.Prepare("INSERT "+table+" ("+keyStr+") values ("+strings.Join(rep, ",")+")")
+	defer stmt.Close()
+	if err != nil {
+		fmt.Println("please check you sql!")
+		return 0
+	}
+	res, err := stmt.Exec(values...)
+	if (err != nil) {
+		fmt.Println("insert is failed!")
+		return 0
+	}
+	id, err := res.LastInsertId()
+	if (err != nil) {
+		fmt.Println("can not get the lastid")
+		return 0
+	}
+	return id
 }

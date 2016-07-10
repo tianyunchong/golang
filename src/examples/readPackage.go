@@ -1,10 +1,9 @@
 package main
 
 import (
-	//"config" 本地调用
+	"config"
 	"fmt"
-
-	"github.com/tianyunchong/golang/src/config"
+	//"github.com/tianyunchong/golang/src/config"
 )
 
 func main() {
