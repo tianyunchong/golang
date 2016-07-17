@@ -97,3 +97,32 @@ func (conn *Conmysql)Insert(data map[string]string, table string) int64{
 	}
 	return id
 }
+
+/**
+	mysql的更新操作
+ */
+func (conn *Conmysql)Update(data map[string]string, where string,table string)int64 {
+	var keys []string
+	var values []interface{}
+	for key, value := range data {
+		keys = append(keys, key+"=?")
+		values = append(values, value)
+	}
+	keyStr := strings.Join(keys, ",")
+	stmt, err := conn.db.Prepare("UPDATE "+table+" SET "+keyStr+" WHERE "+where)
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	res, err := stmt.Exec(values...)
+	if err != nil {
+		fmt.Println("update is failed!")
+		return 0
+	}
+	num ,err := res.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	return num
+}

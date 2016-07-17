@@ -10,28 +10,25 @@ import("github.com/kr/beanstalk"
 
 type BeansCon struct {
 	conn *beanstalk.Conn
-	connWrite *beanstalk.Conn
-	beansName string
 }
 
 /**
 	连接队列
  */
-func (beansObj *BeansCon)Init(config [2]string, beansName string) {
-	beansObj.beansName = beansName
+func (beansObj *BeansCon)Init(config [2]string) {
 	c, err := beanstalk.Dial(config[0], config[1])
 	if err != nil {
 		panic(err)
 	}
-	c.Tube.Name = beansName
-	c.TubeSet.Name[beansName] = true
 	beansObj.conn = c
 }
 
 /**
 	读取队列,获取一条信息并返回
  */
-func (beansObj *BeansCon)Read() string{
+func (beansObj *BeansCon)Read(beansName string) string{
+	beansObj.conn.Tube.Name = beansName
+	beansObj.conn.TubeSet.Name[beansName] = true
 	//从队列中取出
 	id, body, err := beansObj.conn.Reserve(1 * time.Second)
 	if err != nil {
@@ -49,17 +46,18 @@ func (beansObj *BeansCon)Read() string{
 /**
 	写入队列
  */
-func (beansObj *BeansCon)Write(content string) int64 {
+func (beansObj *BeansCon)Write(content string, beansName string) int64 {
+	beansObj.conn.Tube.Name = beansName
+	beansObj.conn.TubeSet.Name[beansName] = true
 	if content == "" {
 		return 0
 	}
 	c := beansObj.conn
 	msg := fmt.Sprintf("%s", content)
-	rs, err := c.Put([]byte(msg), 30, 0, 120*time.Second)
+	_, err := c.Put([]byte(msg), 30, 0, 120*time.Second)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(rs)
 	return 1
 }
 

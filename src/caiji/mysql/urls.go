@@ -9,18 +9,19 @@ import (
 /**
  * 增加url地址
  */
-func AddUrl(url string, cons Conmysql) int64{
+func AddUrl(addInfo map[string]string, cons Conmysql) int64{
+	url := addInfo["url"]
 	url = strings.TrimSpace(url)
 	url = strings.ToLower(url)
 	isExist := ExistUrl(url, cons)
 	if isExist {
-		fmt.Println(url+"已经存在\n")
+		fmt.Println(url+"已经存在")
 		return 0
 	}
 	//开始插入url
 	t := time.Now().Unix()
 	tnew := fmt.Sprintf("%d", t)
-	id := cons.Insert(map[string]string{"url":url, "addtime":tnew, "uptime":tnew}, "cj_urls")
+	id := cons.Insert(map[string]string{"url":url, "fromurl" : addInfo["fromurl"],"addtime":tnew}, "cj_urls")
 	return id
 }
 
@@ -34,4 +35,5 @@ func ExistUrl(url string, cons Conmysql) bool{
 	}
 	return false
 }
+
 
